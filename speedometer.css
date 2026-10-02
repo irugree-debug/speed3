@@ -1,0 +1,229 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+
+body {
+    font-family: Montserrat, Arial, sans-serif;
+}
+
+#car {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.speedometer{
+    /* Гарантирует, что спидометр ВСЕГДА будет виден и display: none не сработает */
+    display: block !important; 
+    
+    width: 16.93vw;
+    height: 14.06vw;
+    background-image: url("img/speedometer-bg.png");
+    background-size: 100% 100%;
+    background-position: center;
+    position: absolute;
+    right: 2vw;
+    bottom: 2vw;
+}
+
+.speedometer .scale{
+    width: 14.06vw;
+    height: 14.06vw;
+    transform: rotate(135deg);
+}
+
+.speedometer .scale .empty{
+    cx: 50%;
+    cy: 50%;
+    r: 40%;
+    stroke: rgba(19, 19, 23, 0.55);
+    stroke-width: 0.9vw;
+    fill: none;
+    stroke-dasharray: 188.25%;
+}
+
+.speedometer .scale .full{
+    cx: 50%;
+    cy: 50%;
+    r: 40%;
+    stroke: url(#gradient);
+    stroke-width: 0.9vw;
+    fill: none;
+    filter: drop-shadow(0 0 3px rgba(42, 254, 183, 0.5));
+    transition: stroke-dasharray .3s ease;
+}
+
+.speedometer .numbers{
+    position: absolute;
+    top: 6.3vw;
+    left: 7.03vw;
+    transform: translate(-50%, -50%);
+    width: 10.2vw;
+}
+
+.speedometer .speed{
+    position: absolute;
+    top: 7.03vw;
+    left: 7.03vw;
+    transform: translate(-50%, -50%);
+    width: 5vw;
+    height: 5vw;
+    background-color: rgba(19, 19, 23, 0.55);
+    border-radius: 50%;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 1.1vw 0;
+}
+
+.speedometer .speed h1{
+    font-family: Montserrat, Arial, sans-serif;
+    font-size: 2vw;
+    color: white;
+    margin: 0 0 0.1vw;
+    line-height: 1;
+}
+
+.speedometer .speed span{
+    font-family: Montserrat, Arial, sans-serif;
+    font-size: 0.8vw;
+    color: #61606e;
+    display: block;
+}
+
+.speedometer .mileage{
+    position: absolute;
+    bottom: 1vw;
+    left: 7.03vw;
+    transform: translate(-50%, 0);
+    background-color: rgba(19, 19, 23, 0.4);
+    font-family: Montserrat, Arial, sans-serif;
+    font-size: 0.8vw;
+    line-height: 1.2vw;
+    height: 1.2vw;
+    border-radius: 10px;
+    text-align: center;
+    padding: 0 0.5vw;
+    color: #61606e;
+    white-space: nowrap;
+}
+
+.speedometer .turnsignals{
+    display: flex;
+    justify-content: space-between;
+    height: 1vw;
+    width: 2.8vw;
+    position: absolute;
+    left: 7.03vw;
+    bottom: 2.8vw;
+    transform: translate(-50%, 0);
+}
+
+.speedometer .turnsignals .signal{
+    height: 100%;
+    width: auto;
+    position: absolute;
+}
+
+.speedometer .turnsignals .signal polygon{
+    fill: rgba(19, 19, 23, 0.55);
+    transition: .2s ease;
+}
+
+.speedometer .turnsignals .signal.left{
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%) rotate(180deg);
+}
+
+.speedometer .turnsignals .signal.right{
+    top: 50%;
+    right: 0;
+    transform: translate(0, -50%);
+}
+
+.speedometer .turnsignals .signal.active polygon{
+    fill: #FFC11E;
+    filter: drop-shadow(0 0 50px #FFC11E);
+}
+
+.speedometer .flags{
+    width: 1vw;
+    height: 6vw;
+    position: absolute;
+    right: 1vw;
+    bottom: 3vw;
+}
+
+.speedometer .flags .flag:nth-child(1){ transform: translate(-4px, 0); }
+.speedometer .flags .flag:nth-child(2){ transform: translate(-2px, 0); }
+.speedometer .flags .flag:nth-child(4){ transform: translate(-2px, 0); }
+.speedometer .flags .flag:nth-child(5){ transform: translate(-4px, 0); }
+
+.speedometer .flags .flag{
+    display: block;
+    margin-top: 3px;
+}
+
+.speedometer .flags .flag:nth-child(1) path,
+.speedometer .flags .flag:nth-child(2) path{
+    fill: #61606e;
+}
+
+.speedometer .flags .flag:nth-child(3) g{ fill: #5b492f; }
+.speedometer .flags .flag:nth-child(4) g{ fill: #2d5556; }
+.speedometer .flags .flag:nth-child(5) polygon{ fill: #5e3035; }
+
+.speedometer .flags .flag.active path,
+.speedometer .flags .flag.active g,
+.speedometer .flags .flag.active polygon{
+    fill: #00dc7d;
+    filter: drop-shadow(0 0 3px #00dc7d);
+}
+
+.speedometer .flags .flag.active:nth-child(5) path,
+.speedometer .flags .flag.active:nth-child(5) g,
+.speedometer .flags .flag.active:nth-child(5) polygon{
+    fill: #ed5e1c;
+    filter: drop-shadow(0 0 3px #ed5e1c);
+}
+
+.speedometer .fuel{
+    position: absolute;
+    bottom: 1vw;
+    right: 1vw;
+    width: 3.4vw;
+    display: flex;
+    align-items: center;
+}
+
+.speedometer .fuel svg{
+    width: 0.8vw;
+    margin-right: 0.2vw;
+}
+
+.speedometer .fuel svg g .st8{
+    fill: white;
+}
+
+.speedometer .fuel span{
+    display: block;
+    font-size: 0.8vw;
+    font-family: Montserrat, Arial, sans-serif;
+    color: white;
+}
+
+.speedometer .fuel span.active{
+    color: #f01616;
+}
+
+.speedometer .fuel svg g.active .st8{
+    fill: #f01616;
+}
