@@ -7,16 +7,42 @@ let turn_right = false;
 let turn_signal_timer = null;
 
 // 1. Функции обновления элементов верстки первого спидометра
-window.setSpeed = function(speed) {
-    const value = Math.max(0, Math.round(Number(speed) || 0));
+let targetSpeed = 0;
+let displayedSpeed = 0;
+let speedAnimationFrame = null;
+const MAX_SPEED = 240;
+
+function animateSpeed() {
+    const delta = targetSpeed - displayedSpeed;
+    displayedSpeed += delta * 0.16;
+
+    if (Math.abs(delta) < 0.08) {
+        displayedSpeed = targetSpeed;
+    }
+
+    const value = Math.max(0, Math.round(displayedSpeed));
     const speedText = document.getElementById('text_speed');
     const speedCircle = document.getElementById('speed_circle');
 
-    if (speedText) speedText.innerText = value;
+    if (speedText) speedText.textContent = value;
     if (speedCircle) {
-        // Расчет процентов дуги спидометра (от 0 до 240 км/ч)
-        const speed_value = Math.min(188.25, (188.25 / 240) * value);
-        speedCircle.style.strokeDasharray = `${speed_value.toFixed(2)}% 500%`;
+        const progress = Math.min(78.35, (78.35 / MAX_SPEED) * displayedSpeed);
+        speedCircle.style.strokeDasharray = `${progress.toFixed(3)} 100`;
+    }
+
+    if (displayedSpeed !== targetSpeed) {
+        speedAnimationFrame = requestAnimationFrame(animateSpeed);
+    } else {
+        speedAnimationFrame = null;
+    }
+}
+
+window.setSpeed = function(speed) {
+    const value = Math.max(0, Math.min(MAX_SPEED, Number(speed) || 0));
+    targetSpeed = value;
+
+    if (speedAnimationFrame === null) {
+        speedAnimationFrame = requestAnimationFrame(animateSpeed);
     }
 };
 
