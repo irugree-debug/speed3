@@ -11,13 +11,15 @@
         <div class="speedometer">
             <svg class="scale">
                 <defs>
-                    <linearGradient id="gradient" gradientTransform="rotate(45)">
-                        <stop offset="0%" style="stop-color:#9bfffe" />
-                        <stop offset="100%" style="stop-color:#2ac08b" />
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#eef3f5" />
+                        <stop offset="34%" stop-color="#9aa7af" />
+                        <stop offset="70%" stop-color="#53616a" />
+                        <stop offset="100%" stop-color="#d6dde1" />
                     </linearGradient>
                 </defs>
-                <circle class="empty"></circle>
-                <circle id="speed_circle" class="full" style="stroke-dasharray: 0 400;"></circle>
+                <circle class="empty" pathLength="100"></circle>
+                <circle id="speed_circle" class="full" pathLength="100" style="stroke-dasharray: 0 100;"></circle>
             </svg>
 
             <img src="img/speedometer-numbers.png" alt="numbers" class="numbers">
