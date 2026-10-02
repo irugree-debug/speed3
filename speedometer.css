@@ -1,6 +1,4 @@
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html, body {
     margin: 0;
@@ -12,218 +10,255 @@ html, body {
 
 body {
     font-family: Montserrat, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
 }
 
 #car {
     width: 100vw;
     height: 100vh;
     position: relative;
+    overflow: hidden;
 }
 
-.speedometer{
-    /* Гарантирует, что спидометр ВСЕГДА будет виден и display: none не сработает */
-    display: block !important; 
-    
-    width: 16.93vw;
-    height: 14.06vw;
-    background-image: url("img/speedometer-bg.png");
-    background-size: 100% 100%;
-    background-position: center;
+/* Адаптивный контейнер: размер не зависит только от ширины экрана */
+.speedometer {
+    --size: clamp(250px, 16.9vw, 365px);
+    width: var(--size);
+    aspect-ratio: 1.205 / 1;
+    height: auto;
     position: absolute;
-    right: 2vw;
-    bottom: 2vw;
+    right: clamp(12px, 2vw, 36px);
+    bottom: clamp(12px, 2vw, 36px);
+    display: block !important;
+    isolation: isolate;
+    overflow: visible;
+    background: url("img/speedometer-bg.png") center / 100% 100% no-repeat;
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .28));
 }
 
-.speedometer .scale{
-    width: 14.06vw;
-    height: 14.06vw;
+/* Лёгкий стеклянный отблеск поверх старого фонового ассета */
+.speedometer::after {
+    content: "";
+    position: absolute;
+    inset: 3% 2% 2%;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 28%;
+    background: linear-gradient(135deg, rgba(255,255,255,.075), transparent 35%, rgba(255,255,255,.018) 70%);
+    opacity: .9;
+}
+
+.speedometer .scale {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 83.1%;
+    height: 100%;
     transform: rotate(135deg);
+    transform-origin: 50% 50%;
+    overflow: visible;
 }
 
-.speedometer .scale .empty{
+.speedometer .scale .empty,
+.speedometer .scale .full {
     cx: 50%;
     cy: 50%;
     r: 40%;
-    stroke: rgba(19, 19, 23, 0.55);
-    stroke-width: 0.9vw;
     fill: none;
-    stroke-dasharray: 188.25%;
+    pathLength: 100;
+    stroke-width: clamp(9px, 0.9vw, 22px);
 }
 
-.speedometer .scale .full{
-    cx: 50%;
-    cy: 50%;
-    r: 40%;
+.speedometer .scale .empty {
+    stroke: rgba(9, 11, 14, .58);
+    stroke-dasharray: 78.35 100;
+}
+
+.speedometer .scale .full {
     stroke: url(#gradient);
-    stroke-width: 0.9vw;
-    fill: none;
-    filter: drop-shadow(0 0 3px rgba(42, 254, 183, 0.5));
-    transition: stroke-dasharray .3s ease;
+    stroke-dasharray: 0 100;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 4px rgba(176, 195, 207, .28));
+    will-change: stroke-dasharray;
 }
 
-.speedometer .numbers{
+.speedometer .numbers {
     position: absolute;
-    top: 6.3vw;
-    left: 7.03vw;
+    top: 44.8%;
+    left: 41.55%;
     transform: translate(-50%, -50%);
-    width: 10.2vw;
+    width: 60.2%;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
 }
 
-.speedometer .speed{
+.speedometer .speed {
     position: absolute;
-    top: 7.03vw;
-    left: 7.03vw;
+    top: 50%;
+    left: 41.55%;
     transform: translate(-50%, -50%);
-    width: 5vw;
-    height: 5vw;
-    background-color: rgba(19, 19, 23, 0.55);
+    width: 29.55%;
+    aspect-ratio: 1;
+    height: auto;
+    padding: 6.5% 0 0;
+    border: 1px solid rgba(255,255,255,.055);
     border-radius: 50%;
     text-align: center;
-    box-sizing: border-box;
-    padding: 1.1vw 0;
+    background: radial-gradient(circle at 35% 28%, rgba(104,116,125,.17), rgba(10,12,15,.68) 72%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 7px 18px rgba(0,0,0,.2);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 
-.speedometer .speed h1{
-    font-family: Montserrat, Arial, sans-serif;
-    font-size: 2vw;
-    color: white;
-    margin: 0 0 0.1vw;
+.speedometer .speed h1 {
+    margin: 0 0 1.5%;
+    color: #f4f6f7;
+    font-size: clamp(25px, 2vw, 43px);
+    font-weight: 650;
     line-height: 1;
+    letter-spacing: -.055em;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 2px 12px rgba(0,0,0,.32);
 }
 
-.speedometer .speed span{
-    font-family: Montserrat, Arial, sans-serif;
-    font-size: 0.8vw;
-    color: #61606e;
+.speedometer .speed span {
     display: block;
+    color: #7f8991;
+    font-size: clamp(10px, .72vw, 14px);
+    line-height: 1;
+    letter-spacing: .08em;
 }
 
-.speedometer .mileage{
+.speedometer .mileage {
     position: absolute;
-    bottom: 1vw;
-    left: 7.03vw;
-    transform: translate(-50%, 0);
-    background-color: rgba(19, 19, 23, 0.4);
-    font-family: Montserrat, Arial, sans-serif;
-    font-size: 0.8vw;
-    line-height: 1.2vw;
-    height: 1.2vw;
-    border-radius: 10px;
+    left: 41.55%;
+    bottom: 7.1%;
+    transform: translateX(-50%);
+    min-width: 15%;
+    height: auto;
+    padding: .32em .7em;
+    border: 1px solid rgba(255,255,255,.035);
+    border-radius: 999px;
+    background: rgba(8,10,12,.42);
+    color: #747e86;
+    font-size: clamp(10px, .68vw, 13px);
+    line-height: 1.15;
     text-align: center;
-    padding: 0 0.5vw;
-    color: #61606e;
     white-space: nowrap;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
-.speedometer .turnsignals{
-    display: flex;
-    justify-content: space-between;
-    height: 1vw;
-    width: 2.8vw;
+.speedometer .turnsignals {
     position: absolute;
-    left: 7.03vw;
-    bottom: 2.8vw;
-    transform: translate(-50%, 0);
+    left: 41.55%;
+    bottom: 20%;
+    transform: translateX(-50%);
+    width: 16.6%;
+    height: 7%;
 }
 
-.speedometer .turnsignals .signal{
-    height: 100%;
-    width: auto;
+.speedometer .turnsignals .signal {
     position: absolute;
-}
-
-.speedometer .turnsignals .signal polygon{
-    fill: rgba(19, 19, 23, 0.55);
-    transition: .2s ease;
-}
-
-.speedometer .turnsignals .signal.left{
     top: 50%;
-    left: 0;
-    transform: translate(0, -50%) rotate(180deg);
+    width: 31%;
+    height: auto;
+    transform: translateY(-50%);
 }
 
-.speedometer .turnsignals .signal.right{
-    top: 50%;
-    right: 0;
-    transform: translate(0, -50%);
+.speedometer .turnsignals .signal.left { left: 0; transform: translateY(-50%) rotate(180deg); }
+.speedometer .turnsignals .signal.right { right: 0; }
+
+.speedometer .turnsignals .signal polygon {
+    fill: rgba(116,127,136,.28);
+    transition: fill .18s ease, filter .18s ease;
 }
 
-.speedometer .turnsignals .signal.active polygon{
-    fill: #FFC11E;
-    filter: drop-shadow(0 0 50px #FFC11E);
+.speedometer .turnsignals .signal.active polygon {
+    fill: #c8d1d7;
+    filter: drop-shadow(0 0 5px rgba(196,208,216,.72));
 }
 
-.speedometer .flags{
-    width: 1vw;
-    height: 6vw;
+.speedometer .flags {
     position: absolute;
-    right: 1vw;
-    bottom: 3vw;
+    right: 6%;
+    bottom: 21%;
+    width: 5.9%;
+    height: 43%;
 }
 
-.speedometer .flags .flag:nth-child(1){ transform: translate(-4px, 0); }
-.speedometer .flags .flag:nth-child(2){ transform: translate(-2px, 0); }
-.speedometer .flags .flag:nth-child(4){ transform: translate(-2px, 0); }
-.speedometer .flags .flag:nth-child(5){ transform: translate(-4px, 0); }
-
-.speedometer .flags .flag{
+.speedometer .flags .flag {
     display: block;
-    margin-top: 3px;
+    width: 100%;
+    height: 17%;
+    margin-top: 3%;
+    transform: none !important;
 }
 
 .speedometer .flags .flag:nth-child(1) path,
-.speedometer .flags .flag:nth-child(2) path{
-    fill: #61606e;
-}
-
-.speedometer .flags .flag:nth-child(3) g{ fill: #5b492f; }
-.speedometer .flags .flag:nth-child(4) g{ fill: #2d5556; }
-.speedometer .flags .flag:nth-child(5) polygon{ fill: #5e3035; }
+.speedometer .flags .flag:nth-child(2) path { fill: #657078; }
+.speedometer .flags .flag:nth-child(3) g { fill: #655c4c; }
+.speedometer .flags .flag:nth-child(4) g { fill: #4b6162; }
+.speedometer .flags .flag:nth-child(5) polygon { fill: #665052; }
 
 .speedometer .flags .flag.active path,
 .speedometer .flags .flag.active g,
-.speedometer .flags .flag.active polygon{
-    fill: #00dc7d;
-    filter: drop-shadow(0 0 3px #00dc7d);
+.speedometer .flags .flag.active polygon {
+    fill: #c9d2d8;
+    filter: drop-shadow(0 0 4px rgba(201,210,216,.65));
 }
 
 .speedometer .flags .flag.active:nth-child(5) path,
 .speedometer .flags .flag.active:nth-child(5) g,
-.speedometer .flags .flag.active:nth-child(5) polygon{
-    fill: #ed5e1c;
-    filter: drop-shadow(0 0 3px #ed5e1c);
+.speedometer .flags .flag.active:nth-child(5) polygon {
+    fill: #d7a08c;
+    filter: drop-shadow(0 0 4px rgba(215,160,140,.55));
 }
 
-.speedometer .fuel{
+.speedometer .fuel {
     position: absolute;
-    bottom: 1vw;
-    right: 1vw;
-    width: 3.4vw;
+    right: 6%;
+    bottom: 7%;
+    width: 20%;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    gap: 5%;
 }
 
-.speedometer .fuel svg{
-    width: 0.8vw;
-    margin-right: 0.2vw;
+.speedometer .fuel svg { width: 18%; height: auto; flex: 0 0 auto; }
+.speedometer .fuel svg g .st8 { fill: #dce1e4; }
+.speedometer .fuel span {
+    color: #e1e5e7;
+    font-size: clamp(10px, .7vw, 14px);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+.speedometer .fuel span.active { color: #e39a8d; }
+.speedometer .fuel svg g.active .st8 { fill: #e39a8d; }
+
+@media (max-aspect-ratio: 4/3) {
+    .speedometer {
+        --size: clamp(230px, 30vh, 330px);
+        right: 1.5vw;
+        bottom: 1.5vh;
+    }
 }
 
-.speedometer .fuel svg g .st8{
-    fill: white;
+@media (max-width: 700px) {
+    .speedometer {
+        --size: clamp(205px, 38vw, 290px);
+        right: 10px;
+        bottom: 10px;
+    }
 }
 
-.speedometer .fuel span{
-    display: block;
-    font-size: 0.8vw;
-    font-family: Montserrat, Arial, sans-serif;
-    color: white;
-}
-
-.speedometer .fuel span.active{
-    color: #f01616;
-}
-
-.speedometer .fuel svg g.active .st8{
-    fill: #f01616;
+@media (max-height: 500px) {
+    .speedometer {
+        --size: clamp(190px, 48vh, 300px);
+        right: 10px;
+        bottom: 8px;
+    }
 }
